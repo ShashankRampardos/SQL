@@ -1,7 +1,9 @@
--- Q1
+
 create database assignment;
 
 use assignment;
+
+-- Q1
 
 create table Department (
 Deptno int(2) auto_increment ,
@@ -105,3 +107,70 @@ where (E.Deptno=D.Deptno)and city="Jaipur";
 select Dname,sum(Salary) from Employ as E, Department as D
 where (E.Deptno=D.Deptno)
 group by Dname;
+
+-- Q
+update employ set mgr=11 where empno=1;
+update employ set mgr=4 where empno=2;
+update employ set mgr=1 where empno=3;
+update employ set mgr=6 where empno=5;
+update employ set mgr=7 where empno=9;
+update employ set mgr=6 where empno=10;
+-- and e1.mgr=(select empno from enploy)
+
+-- Q17
+select e1.ename as manager,e2.ename as employee from employ as e1,employ as e2 
+where (e1.empno=e2.mgr);
+
+-- Q18
+commit;
+update employ set salary=(salary+salary*0.1) where salary<50000;
+
+-- Q20
+
+select d.dname, e.ename 
+from employ as e,
+(select dname,deptno 
+from department 
+group by dname) as d
+where d.deptno=e.deptno;
+
+-- Q21
+
+select dname, max(salary) from department d,employ e
+where d.deptno=e.deptno
+group by dname;
+
+-- Q22
+select dname, count(*) no_of_emp  from department d, employ e
+where d.deptno=e.deptno
+group by dname;
+
+-- Q23
+
+select dname,empno, ename, salary  
+from employ e join department d on d.deptno=e.deptno
+where salary in(select max(salary) from employ e join department d on d.deptno=e.deptno 
+									   group by dname);
+-- commit;
+-- Q24
+update employ set salary = (salary+salary*0.05) where deptno=3 and(salary<60000);
+
+-- Q25 
+-- commit;
+delete from employ where empno=2;
+-- rollback;
+
+-- Q27
+-- commit;
+create table dept2 as (select * from employ where deptno=2);
+
+-- Q28
+-- commit;
+create view view_dept2 as (select * from employ where deptno=2);
+-- select * from view_dept2;
+-- Q29
+update view_dept2 set salary=(salary+salary*0.05);
+-- commit;
+-- Q30
+drop view view_dept2;
+-- rollback; rollback will not work on DDL command
